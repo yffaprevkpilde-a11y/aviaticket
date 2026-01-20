@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Админ-панель - SkyTravel</title>
+  <!-- Шрифты -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Настройка кастомных цветов -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2AA8B0',
+            secondary: '#8DC63F',
+            accent: '#FFA07A',
+            'gray-light': '#F5F5F5',
+            'gray-dark': '#757575',
+            danger: '#FF6B6B',
+            warning: '#FFD166',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <nav class="w-64 bg-gradient-to-b from-primary to-[#1a7c83] text-white fixed h-screen overflow-y-auto shadow-lg z-50 hidden md:block">
+    <div class="p-5 border-b border-white/10 mb-8">
+      <h2 class="text-xl font-bold">SkyTravel Admin</h2>
+      <p class="text-white/70 text-sm">Панель управления</p>
+    </div>
+
+    <div class="px-5 pb-6 border-b border-white/10 mb-6 text-center">
+      <div class="w-15 h-15 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4 text-2xl">👨‍💼</div>
+      <div class="font-semibold mb-1">Администратор</div>
+      <span class="text-xs bg-white/10 text-white/70 px-3 py-1 rounded-full inline-block">Супер-админ</span>
+    </div>
+
+    <ul class="px-5 space-y-1">
+      <li><a href="#dashboard" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/10 text-white active-link">📊 Дашборд</a></li>
+      <li><a href="#flights" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors">✈️ Управление рейсами</a></li>
+      <li><a href="#orders" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors">📦 Заказы</a></li>
+      <li><a href="#users" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors">👥 Пользователи</a></li>
+      <li><a href="#analytics" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors">📈 Аналитика</a></li>
+      <li><a href="#content" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors">📝 Контент</a></li>
+      <li><a href="#settings" class="flex items-center gap-3 px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors">⚙️ Настройки</a></li>
+    </ul>
+
+    <div class="px-5 mt-8">
+      <a href="index.html" class="block w-full text-center px-4 py-3 border border-white/30 text-white rounded-lg hover:bg-white/10 transition-colors">← На сайт</a>
+    </div>
+  </nav>
+
+  <!-- Mobile Toggle Button -->
+  <button id="mobileMenuBtn" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-primary text-white rounded-lg">
+    ☰
+  </button>
+
+  <!-- Main Content -->
+  <main class="flex-1 ml-0 md:ml-64 p-5 pt-20 md:pt-5">
+    <!-- Header -->
+    <header class="bg-white p-6 rounded-xl shadow-sm mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-primary">Панель администратора</h1>
+        <p class="text-gray-dark">Управление системой продажи авиабилетов</p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+        <div class="relative w-full sm:w-80">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-dark">🔍</span>
+          <input type="text" placeholder="Поиск..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30">
+        </div>
+        <div class="flex gap-2">
+          <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#239097] transition-all" onclick="openAddFlightModal()">+ Добавить рейс</button>
+          <button class="px-4 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-all" onclick="showNotifications()">🔔</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Stats -->
+    <div id="dashboard" class="mb-10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+          <div class="w-15 h-15 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-2xl">📊</div>
+          <div>
+            <h3 class="text-3xl font-bold">156</h3>
+            <p class="text-gray-dark text-sm">Всего заказов сегодня</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+          <div class="w-15 h-15 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center text-2xl">💰</div>
+          <div>
+            <h3 class="text-3xl font-bold">1,234,500 ₽</h3>
+            <p class="text-gray-dark text-sm">Выручка за день</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+          <div class="w-15 h-15 rounded-lg bg-accent/10 text-accent flex items-center justify-center text-2xl">✈️</div>
+          <div>
+            <h3 class="text-3xl font-bold">42</h3>
+            <p class="text-gray-dark text-sm">Активных рейсов</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow">
+          <div class="w-15 h-15 rounded-lg bg-warning/10 text-[#e6b400] flex items-center justify-center text-2xl">👥</div>
+          <div>
+            <h3 class="text-3xl font-bold">3,458</h3>
+            <p class="text-gray-dark text-sm">Активных пользователей</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="font-semibold mb-4">Продажи по дням</h3>
+          <div class="bg-gray-100 h-72 rounded-lg flex items-center justify-center text-gray-500">
+            📈 График продаж за неделю
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <h3 class="font-semibold mb-4">Популярные направления</h3>
+          <div class="bg-gray-100 h-72 rounded-lg flex items-center justify-center text-gray-500">
+            📊 Топ 5 направлений
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flights Section -->
+    <section id="flights" class="bg-white p-6 rounded-xl shadow-sm mb-10 hidden">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h2 class="text-xl font-bold text-primary">Управление рейсами</h2>
+        <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#239097] transition-all" onclick="openAddFlightModal()">+ Добавить рейс</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="p-4 font-medium">Номер рейса</th>
+              <th class="p-4 font-medium">Маршрут</th>
+              <th class="p-4 font-medium">Дата/Время</th>
+              <th class="p-4 font-medium">Самолет</th>
+              <th class="p-4 font-medium">Свободные места</th>
+              <th class="p-4 font-medium">Цена</th>
+              <th class="p-4 font-medium">Статус</th>
+              <th class="p-4 font-medium">Действия</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr class="hover:bg-primary/5 transition-colors">
+              <td class="p-4">SU-1001</td>
+              <td class="p-4">Москва (SVO) → Стамбул (IST)</td>
+              <td class="p-4">15.05.2024 15:30</td>
+              <td class="p-4">Boeing 737-800</td>
+              <td class="p-4">45/180</td>
+              <td class="p-4">12,450 ₽</td>
+              <td class="p-4"><span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">Активен</span></td>
+              <td class="p-4">
+                <div class="flex gap-2">
+                  <button class="px-3 py-1 border border-primary text-primary rounded text-xs hover:bg-primary hover:text-white transition-colors" onclick="editFlight(1)">✏️</button>
+                  <button class="px-3 py-1 bg-danger text-white rounded text-xs hover:bg-[#ff5252] transition-colors" onclick="deleteFlight(1)">🗑️</button>
+                </div>
+              </td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section id="orders" class="bg-white p-6 rounded-xl shadow-sm mb-10 hidden">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h2 class="text-xl font-bold text-primary">Управление заказами</h2>
+        <select class="border border-gray-300 rounded-lg px-3 py-2">
+          <option>Все статусы</option>
+          <option>Оплачено</option>
+          <option>Ожидает оплаты</option>
+          <option>Отменено</option>
+        </select>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="p-4 font-medium">ID заказа</th>
+              <th class="p-4 font-medium">Клиент</th>
+              <th class="p-4 font-medium">Рейс</th>
+              <th class="p-4 font-medium">Дата</th>
+              <th class="p-4 font-medium">Сумма</th>
+              <th class="p-4 font-medium">Статус</th>
+              <th class="p-4 font-medium">Действия</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr class="hover:bg-primary/5 transition-colors">
+              <td class="p-4">#ORD-00123</td>
+              <td class="p-4">Иван Петров</td>
+              <td class="p-4">SU-1001 (SVO→IST)</td>
+              <td class="p-4">14.05.2024 10:30</td>
+              <td class="p-4">24,900 ₽</td>
+              <td class="p-4"><span class="px-3 py-1 bg-green-100 text-secondary rounded-full text-xs font-medium">Оплачено</span></td>
+              <td class="p-4">
+                <div class="flex gap-2">
+                  <button class="px-3 py-1 border border-primary text-primary rounded text-xs hover:bg-primary hover:text-white transition-colors" onclick="viewOrder(1)">👁️</button>
+                  <button class="px-3 py-1 bg-secondary text-white rounded text-xs hover:bg-[#7CB03A] transition-colors" onclick="editOrder(1)">✏️</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Users, Analytics, Content, Settings sections can be similarly converted -->
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-dark text-sm pt-6 border-t border-gray-200 mt-10">
+      <p>SkyTravel Admin Panel v2.0 &copy; 2024 | Практическая работа №10 "Продажа авиабилетов"</p>
+      <p>ГБПОУ НСО «Новосибирский авиационный технический колледж имени Б.С. Галущака»</p>
+    </footer>
+  </main>
+
+  <!-- Add Flight Modal -->
+  <div id="addFlightModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-primary">Добавить новый рейс</h3>
+        <button class="text-2xl text-gray-dark hover:text-gray-700" onclick="closeAddFlightModal()">×</button>
+      </div>
+      <form id="flightForm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="block mb-2 font-medium">Номер рейса *</label>
+            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" required>
+          </div>
+          <div>
+            <label class="block mb-2 font-medium">Авиакомпания *</label>
+            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30" required>
+              <option>Turkish Airlines</option>
+              <option>S7 Airlines</option>
+              <option>Аэрофлот</option>
+              <option>Pegasus Airlines</option>
+            </select>
+          </div>
+          <!-- Add other fields similarly -->
+        </div>
+        <div class="flex justify-end gap-3">
+          <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" onclick="closeAddFlightModal()">Отмена</button>
+          <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#239097] transition-colors">Добавить рейс</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Navigation logic
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('nav a').forEach(a => a.classList.remove('bg-white/10', 'text-white'));
+        this.classList.add('bg-white/10', 'text-white');
+
+        const targetId = this.getAttribute('href').substring(1);
+        document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+
+        if (targetId === 'dashboard') {
+          document.getElementById('dashboard').classList.remove('hidden');
+        } else {
+          document.getElementById(targetId)?.classList.remove('hidden');
+        }
+      });
+    });
+
+    // Mobile menu toggle
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.toggle('hidden');
+    });
+
+    // Modal functions
+    function openAddFlightModal() {
+      document.getElementById('addFlightModal').classList.remove('hidden');
+    }
+    function closeAddFlightModal() {
+      document.getElementById('addFlightModal').classList.add('hidden');
+    }
+
+    // Other functions remain unchanged...
+    function editFlight(id) { alert(`Редактирование рейса #${id}`); }
+    function deleteFlight(id) { if(confirm(`Удалить рейс #${id}?`)) alert(`Рейс #${id} удален`); }
+    function viewOrder(id) { alert(`Просмотр заказа #ORD-00${id}`); }
+    function showNotifications() { alert('У вас 3 новых уведомления...'); }
+
+    document.getElementById('flightForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Новый рейс успешно добавлен!');
+      closeAddFlightModal();
+    });
+
+    document.getElementById('addFlightModal').addEventListener('click', function(e) {
+      if (e.target === this) closeAddFlightModal();
+    });
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#dashboard').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
